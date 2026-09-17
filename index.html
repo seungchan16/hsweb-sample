@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서승찬 | 한신대학교 AI·SW대학 포트폴리오</title>
+    <!-- Google Font: Nanum Gothic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#0f172a',
+                            dark: '#1e293b',
+                            sky: '#38bdf8',
+                            skyLight: '#e0f2fe',
+                            skyDark: '#0284c7',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Nanum Gothic"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nanum Gothic', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* 캔버스 배경 스티키 & 고정 */
+        #sakura-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* 하늘색 신비로운 글로우 효과 */
+        .sky-glow {
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
+        }
+
+        .sky-glow-lg {
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.35);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 30%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 스킬바 애니메이션 효과 */
+        .skill-progress {
+            transition: width 1.5s ease-in-out;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-sky-500 selection:text-white">
+
+    <!-- Sakura Particle Canvas -->
+    <canvas id="sakura-canvas"></canvas>
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-sky-200 flex items-center justify-center font-extrabold text-slate-950 text-xl shadow-md group-hover:scale-105 transition-transform">
+                    SSC
+                </div>
+                <span class="font-bold text-xl tracking-tight text-white group-hover:text-sky-400 transition-colors">
+                    서승찬 <span class="text-sky-400 font-normal text-sm hidden sm:inline">| AI·SW</span>
+                </span>
+            </a>
+
+            <!-- Desktop Nav Menu -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-300">
+                <a href="#about" class="hover:text-sky-400 transition-colors py-1 border-b-2 border-transparent hover:border-sky-400">소개</a>
+                <a href="#education" class="hover:text-sky-400 transition-colors py-1 border-b-2 border-transparent hover:border-sky-400">학력 & 경력</a>
+                <a href="#skills" class="hover:text-sky-400 transition-colors py-1 border-b-2 border-transparent hover:border-sky-400">자격 & 스킬</a>
+                <a href="#personality" class="hover:text-sky-400 transition-colors py-1 border-b-2 border-transparent hover:border-sky-400">성격 & 가치관</a>
+                <a href="#contact" class="px-5 py-2.5 rounded-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold transition-all shadow-lg hover:shadow-sky-500/20 active:scale-95">
+                    연락하기
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white focus:outline-none p-2" aria-label="메뉴 열기">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-6 space-y-3">
+            <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-sky-400 hover:bg-slate-800">소개</a>
+            <a href="#education" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-sky-400 hover:bg-slate-800">학력 & 경력</a>
+            <a href="#skills" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-sky-400 hover:bg-slate-800">자격 & 스킬</a>
+            <a href="#personality" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-sky-400 hover:bg-slate-800">성격 & 가치관</a>
+            <a href="#contact" class="block text-center px-3 py-3 rounded-md text-base font-bold text-slate-950 bg-sky-400 hover:bg-sky-300 mt-4">연락하기</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <!-- Background Decorative Glows -->
+        <div class="absolute top-1/4 left-10 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-20">
+            <!-- Left Text Content -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/80 border border-sky-500/30 text-sky-400 text-sm font-semibold backdrop-blur-sm shadow-inner">
+                    <span class="animate-pulse">🌸</span> 새로운 시작을 꿈꾸는 봄의 개발자
+                </div>
+                
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                    안녕하세요! <br/>
+                    <span class="text-gradient">한신대학교 AI·SW대학</span><br/>
+                    <span class="text-sky-400">서승찬</span>입니다.
+                </h1>
+
+                <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                    봄날의 생동감처럼 새로운 기술을 배우고 끊임없이 도전하는 것을 즐깁니다. 
+                    검은색의 깊이 있는 전문성과 하늘색의 유연한 사고로 지능형 소프트웨어의 미래를 만들어가고 있습니다.
+                </p>
+
+                <!-- Hero Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#about" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-sky-500/25 transition-all transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-user-astronaut"></i> 프로필 자세히 보기
+                    </a>
+                    <a href="#contact" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-paper-plane"></i> 연락하기
+                    </a>
+                </div>
+
+                <!-- Quick Tags -->
+                <div class="pt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs text-slate-400">
+                    <span class="bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50"><i class="fa-solid fa-graduation-cap text-sky-400 mr-1.5"></i> 한신대 AI·SW</span>
+                    <span class="bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50"><i class="fa-solid fa-seedling text-pink-400 mr-1.5"></i> Spring & Blossom</span>
+                    <span class="bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50"><i class="fa-solid fa-laptop-code text-sky-400 mr-1.5"></i> Web & AI Dev</span>
+                </div>
+            </div>
+
+            <!-- Right Image Card Visual -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-full max-w-md">
+                    <!-- Outer Decorative Frame -->
+                    <div class="absolute -inset-1 bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl blur-lg opacity-40 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                    
+                    <div class="relative rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden shadow-2xl p-4">
+                        <!-- Card Main Image (Unsplash Commercial Free Spring Concept) -->
+                        <div class="relative h-80 sm:h-96 rounded-xl overflow-hidden group">
+                            <img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?auto=format&fit=crop&w=800&q=80" 
+                                 alt="봄날의 벚꽃 배경" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                 onerror="this.src='https://placehold.co/800x800/1e293b/38bdf8?text=Seo+Seung+Chan'" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+                            
+                            <!-- Profile Badge Floating inside Image -->
+                            <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-700/60">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-sky-500/20 border border-sky-400 flex items-center justify-center text-sky-400 text-xl font-bold">
+                                        <i class="fa-solid fa-code"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-white text-base">서승찬 (Seo Seung Chan)</h3>
+                                        <p class="text-xs text-sky-300">한신대학교 AI·SW대학 학생</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Info Grid -->
+                        <div class="grid grid-cols-2 gap-3 mt-4 text-center text-xs">
+                            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                                <span class="block text-slate-400">선호 색상</span>
+                                <span class="font-bold text-sky-400">Black & Sky Blue</span>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                                <span class="block text-slate-400">좋아하는 계절</span>
+                                <span class="font-bold text-pink-300">🌸 봄 (Spring)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/60 border-t border-slate-800/80 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-sky-400 font-bold text-sm tracking-widest uppercase mb-2">ABOUT ME</h2>
+                <h3 class="text-3xl sm:text-4xl font-extrabold text-white">저에 대해 소개합니다 🙋‍♂️</h3>
+                <div class="w-16 h-1 bg-sky-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-slate-800/50 hover:bg-slate-800 p-8 rounded-2xl border border-slate-700/60 transition-all duration-300 sky-glow group">
+                    <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center text-sky-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-university"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">소속 및 배움</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        한신대학교 AI·SW대학에 재학 중이며, 컴퓨터 과학의 기초부터 지능형 소프트웨어 알고리즘, 최신 웹 프로그래밍 기술까지 폭넓게 탐구하고 있습니다.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-slate-800/50 hover:bg-slate-800 p-8 rounded-2xl border border-slate-700/60 transition-all duration-300 sky-glow group">
+                    <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center text-sky-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-palette"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">취향과 스타일</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        묵직하고 세련된 <span class="text-slate-100 font-bold">검은색(#111827)</span>과 시원하고 청량한 <span class="text-sky-400 font-bold">하늘색(#38BDF8)</span>의 조합을 좋아합니다. 명확함 속에서 빛나는 포인트 디자인을 선호합니다.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-slate-800/50 hover:bg-slate-800 p-8 rounded-2xl border border-slate-700/60 transition-all duration-300 sky-glow group">
+                    <div class="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-400/30 flex items-center justify-center text-pink-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">계절적 영감 (봄)</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        새로운 피어남과 시작을 알리는 <span class="text-pink-300 font-bold">봄</span>을 가장 좋아합니다. 봄날의 포근함과 화사함처럼 사람들에게 편안함과 긍정적 영향력을 주는 개발자가 되고자 합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education & Experience Section -->
+    <section id="education" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-sky-400 font-bold text-sm tracking-widest uppercase mb-2">TIMELINE</h2>
+                <h3 class="text-3xl sm:text-4xl font-extrabold text-white">학력 및 주요 활동 🎓</h3>
+                <div class="w-16 h-1 bg-sky-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Timeline Structure -->
+            <div class="max-w-4xl mx-auto relative border-l-2 border-slate-800 pl-6 sm:pl-10 space-y-12">
+                <!-- Timeline Item 1 -->
+                <div class="relative group">
+                    <!-- Dot Marker -->
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-6 h-6 rounded-full bg-slate-900 border-2 border-sky-400 group-hover:bg-sky-400 transition-colors flex items-center justify-center">
+                        <div class="w-2 h-2 rounded-full bg-sky-400 group-hover:bg-slate-900"></div>
+                    </div>
+                    <div class="bg-slate-800/40 p-6 rounded-xl border border-slate-700/50 hover:border-sky-500/50 transition-colors">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 mb-2">재학 중</span>
+                        <h4 class="text-xl font-bold text-white">한신대학교 AI·SW대학</h4>
+                        <p class="text-slate-400 text-sm mb-3">인공지능 및 소프트웨어전공</p>
+                        <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">
+                            <li>인공지능, 데이터 구조, 프로그래밍 언어 기본 커리큘럼 이수</li>
+                            <li>웹 프로그래밍 과목을 통한 실전 프론트엔드 웹사이트 제작 심화 학습</li>
+                            <li>팀 기반 알고리즘 연구 및 프로젝트 수행</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 2 -->
+                <div class="relative group">
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-6 h-6 rounded-full bg-slate-900 border-2 border-sky-400 group-hover:bg-sky-400 transition-colors flex items-center justify-center">
+                        <div class="w-2 h-2 rounded-full bg-sky-400 group-hover:bg-slate-900"></div>
+                    </div>
+                    <div class="bg-slate-800/40 p-6 rounded-xl border border-slate-700/50 hover:border-sky-500/50 transition-colors">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-slate-700 text-slate-300 mb-2">프로젝트</span>
+                        <h4 class="text-xl font-bold text-white">웹프로그래밍 수업 스터디 & 웹 앱 개발</h4>
+                        <p class="text-slate-400 text-sm mb-3">개인 및 팀 프로젝트</p>
+                        <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">
+                            <li>HTML5, CSS3, JavaScript 활용 반응형 개인 포트폴리오 웹사이트 구축</li>
+                            <li>웹 표준 및 사용자 경험(UX) 고려 인터랙티브 요소 구현</li>
+                            <li>GitHub를 활용한 소스코드 관리 및 배포</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 3 -->
+                <div class="relative group">
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-6 h-6 rounded-full bg-slate-900 border-2 border-sky-400 group-hover:bg-sky-400 transition-colors flex items-center justify-center">
+                        <div class="w-2 h-2 rounded-full bg-sky-400 group-hover:bg-slate-900"></div>
+                    </div>
+                    <div class="bg-slate-800/40 p-6 rounded-xl border border-slate-700/50 hover:border-sky-500/50 transition-colors">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-slate-700 text-slate-300 mb-2">역량 강화</span>
+                        <h4 class="text-xl font-bold text-white">AI·SW 기술 역량 워크숍 및 세미나 참여</h4>
+                        <p class="text-slate-400 text-sm mb-3">교내 프로그램</p>
+                        <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">
+                            <li>최신 AI 기술 동향 및 파이썬 기반 데이터 분석 입문 수료</li>
+                            <li>협업을 위한 버전 관리(Git/GitHub) 실습 완료</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Qualifications & Skills Section -->
+    <section id="skills" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/60 border-t border-slate-800/80">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-sky-400 font-bold text-sm tracking-widest uppercase mb-2">CAPABILITIES</h2>
+                <h3 class="text-3xl sm:text-4xl font-extrabold text-white">자격증 및 기술 스택 💡</h3>
+                <div class="w-16 h-1 bg-sky-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <!-- Left: Certificates & Badges -->
+                <div class="lg:col-span-5 space-y-6">
+                    <h4 class="text-2xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-award text-sky-400"></i> 자격 및 성과
+                    </h4>
+                    <p class="text-slate-400 text-sm">
+                        지속적인 학습을 통해 취득하거나 준비 중인 주요 자격 항목입니다.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center gap-4 hover:border-sky-400/50 transition-colors">
+                            <div class="text-3xl text-sky-400">
+                                📜
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-white">정보처리기능사 / 산업기사 (준비 중)</h5>
+                                <p class="text-xs text-slate-400">컴퓨터 시스템 및 데이터베이스 관련 역량 인증</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center gap-4 hover:border-sky-400/50 transition-colors">
+                            <div class="text-3xl text-sky-400">
+                                💻
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-white">웹프로그래밍 이수 인증</h5>
+                                <p class="text-xs text-slate-400">한신대학교 AI·SW대학 교과과정 수료</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center gap-4 hover:border-sky-400/50 transition-colors">
+                            <div class="text-3xl text-sky-400">
+                                🤖
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-white">AI SW 기초 트랙 수료</h5>
+                                <p class="text-xs text-slate-400">파이썬 및 인공지능 기초 알고리즘 워크숍</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Skill Progress Bars -->
+                <div class="lg:col-span-7 space-y-6">
+                    <h4 class="text-2xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-code text-sky-400"></i> 보유 기술 스택
+                    </h4>
+                    <p class="text-slate-400 text-sm">
+                        수업 및 개인 프로젝트에서 활용 중인 핵심 기술 수준입니다.
+                    </p>
+
+                    <div class="space-y-5 bg-slate-800/30 p-6 rounded-2xl border border-slate-800">
+                        <!-- Skill Item 1 -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-2">
+                                <span class="text-white flex items-center gap-2"><i class="fa-brands fa-html5 text-orange-400"></i> HTML5 & CSS3</span>
+                                <span class="text-sky-400">85%</span>
+                            </div>
+                            <div class="w-full h-3 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-sky-500 to-blue-500 rounded-full skill-progress" style="width: 85%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item 2 -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-2">
+                                <span class="text-white flex items-center gap-2"><i class="fa-brands fa-js text-yellow-400"></i> JavaScript (ES6+)</span>
+                                <span class="text-sky-400">75%</span>
+                            </div>
+                            <div class="w-full h-3 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-sky-500 to-blue-500 rounded-full skill-progress" style="width: 75%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item 3 -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-2">
+                                <span class="text-white flex items-center gap-2"><i class="fa-brands fa-python text-blue-400"></i> Python & AI 기초</span>
+                                <span class="text-sky-400">70%</span>
+                            </div>
+                            <div class="w-full h-3 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-sky-500 to-blue-500 rounded-full skill-progress" style="width: 70%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item 4 -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-2">
+                                <span class="text-white flex items-center gap-2"><i class="fa-brands fa-git-alt text-red-400"></i> Git & GitHub</span>
+                                <span class="text-sky-400">80%</span>
+                            </div>
+                            <div class="w-full h-3 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-sky-500 to-blue-500 rounded-full skill-progress" style="width: 80%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Personality & Values Section -->
+    <section id="personality" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-sky-400 font-bold text-sm tracking-widest uppercase mb-2">PERSONALITY</h2>
+                <h3 class="text-3xl sm:text-4xl font-extrabold text-white">성격 및 가치관 🌱</h3>
+                <div class="w-16 h-1 bg-sky-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Value Card 1 -->
+                <div class="bg-slate-800/40 p-8 rounded-2xl border border-slate-700/60 hover:border-sky-400 transition-all text-center">
+                    <div class="w-16 h-16 rounded-full bg-sky-500/10 text-sky-400 text-3xl flex items-center justify-center mx-auto mb-6">
+                        🧘‍♂️
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">차분함과 침착한 문제해결</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        복잡한 버그나 어려운 과제 앞에서도 서두르지 않고 차분하게 원인을 분석합니다. 결단력 있게 최적의 해결책을 찾아냅니다.
+                    </p>
+                </div>
+
+                <!-- Value Card 2 -->
+                <div class="bg-slate-800/40 p-8 rounded-2xl border border-slate-700/60 hover:border-sky-400 transition-all text-center">
+                    <div class="w-16 h-16 rounded-full bg-sky-500/10 text-sky-400 text-3xl flex items-center justify-center mx-auto mb-6">
+                        🚀
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">끊임없는 배움과 탐구</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        빠르게 변하는 SW/AI 생태계에서 새로운 프레임워크와 트렌드를 스폰지처럼 흡수하며 성장하는 과정에서 기쁨을 느낍니다.
+                    </p>
+                </div>
+
+                <!-- Value Card 3 -->
+                <div class="bg-slate-800/40 p-8 rounded-2xl border border-slate-700/60 hover:border-sky-400 transition-all text-center">
+                    <div class="w-16 h-16 rounded-full bg-sky-500/10 text-sky-400 text-3xl flex items-center justify-center mx-auto mb-6">
+                        🤝
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">배려와 따뜻한 협동심</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        봄날의 따스함처럼 팀원들과 배려 속에 협력합니다. 경청하는 태도로 분위기를 진작시키며 동료와 함께 성장합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Footer Section -->
+    <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/80 border-t border-slate-800 relative">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-sky-400 font-bold text-sm tracking-widest uppercase mb-2">CONTACT ME</h2>
+            <h3 class="text-3xl sm:text-4xl font-extrabold text-white mb-6">함께 이야기 나누고 싶으신가요? ✉️</h3>
+            <p class="text-slate-300 mb-10 text-base max-w-xl mx-auto">
+                한신대학교 AI·SW대학 서승찬에게 궁금한 점이나 프로젝트 관련 질문이 있다면 언제든 편하게 연락해 주세요!
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
+                <!-- Email Card -->
+                <a href="mailto:seungchan@hs.ac.kr" class="w-full sm:w-auto px-6 py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center gap-3 text-white transition-all group sky-glow">
+                    <i class="fa-solid fa-envelope text-2xl text-sky-400 group-hover:scale-110 transition-transform"></i>
+                    <div class="text-left">
+                        <span class="block text-xs text-slate-400">Email Address</span>
+                        <span class="font-bold text-sm sm:text-base">seungchan@hs.ac.kr</span>
+                    </div>
+                </a>
+
+                <!-- GitHub Card -->
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-6 py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center gap-3 text-white transition-all group sky-glow">
+                    <i class="fa-brands fa-github text-2xl text-sky-400 group-hover:scale-110 transition-transform"></i>
+                    <div class="text-left">
+                        <span class="block text-xs text-slate-400">GitHub Profile</span>
+                        <span class="font-bold text-sm sm:text-base">github.com/seungchan</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="pt-8 border-t border-slate-800/80 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p>© 2026 Seo Seung Chan. All rights reserved.</p>
+                <p class="flex items-center gap-1">
+                    Hanshin Univ. AI·SW College <span class="text-pink-400">🌸</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // -------------------------------------------------------------
+        // 1. 모바일 메뉴 토글 로직
+        // -------------------------------------------------------------
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 모바일 메뉴 링크 클릭시 자동 닫힘
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // -------------------------------------------------------------
+        // 2. 벚꽃(Sakura) 파티클 Canvas 애니메이션 효과
+        // -------------------------------------------------------------
+        const canvas = document.getElementById('sakura-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // 벚꽃 잎 개수 설정
+        const petalCount = 35;
+        const petals = [];
+
+        class Petal {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height - height;
+                this.size = Math.random() * 8 + 6;
+                this.speedY = Math.random() * 1.2 + 0.6;
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.angle = Math.random() * Math.PI * 2;
+                this.spin = (Math.random() - 0.5) * 0.02;
+                // 검은색/하늘색 콘셉트에 맞춰 벚꽃 분홍과 시원한 하늘색 빛 은은하게 조화
+                const isSky = Math.random() > 0.7;
+                this.color = isSky ? 'rgba(186, 230, 253, 0.6)' : 'rgba(255, 209, 220, 0.7)';
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.angle) * 0.8 + this.speedX;
+                this.angle += this.spin;
+
+                // 화면 아래로 넘어가면 리셋
+                if (this.y > height + 20) {
+                    this.y = -20;
+                    this.x = Math.random() * width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.beginPath();
+                // 잎 모양 그리기 (타원 기반)
+                ctx.ellipse(0, 0, this.size, this.size / 2, Math.PI / 4, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // 파티클 생성
+        for (let i = 0; i < petalCount; i++) {
+            petals.push(new Petal());
+        }
+
+        // 애니메이션 루프
+        function animateSakura() {
+            ctx.clearRect(0, 0, width, height);
+            petals.forEach(petal => {
+                petal.update();
+                petal.draw();
+            });
+            requestAnimationFrame(animateSakura);
+        }
+
+        // 페이지 로드 후 실행
+        window.onload = function() {
+            animateSakura();
+        };
+    </script>
+</body>
+</html>
